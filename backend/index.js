@@ -15,6 +15,9 @@ app.use(cors({
 // Routes
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
+const institutionRoutes = require('./routes/institutionRoutes');
+app.use('/api/institutions', institutionRoutes);
+
 
 // Database Connection
 const URI = process.env.MONGO_URI;

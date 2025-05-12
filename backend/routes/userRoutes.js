@@ -22,6 +22,33 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
+
+// In /api/users/register
+const Institution = require('../models/Institution');
+
+router.post('/register/:linkId', async (req, res) => {
+  const { linkId } = req.params;
+  const { name, email, descriptor } = req.body;
+
+  const institution = await Institution.findOne({ registrationLink: new RegExp(linkId, 'i') });
+  if (!institution) return res.status(404).json({ message: 'Invalid institution link.' });
+
+  try {
+    const userExists = await User.findOne({ email });
+    if (userExists) return res.status(409).json({ message: 'User already exists.' });
+
+    const user = new User({ name, email, descriptor, institutionId: institution._id });
+    await user.save();
+
+    res.status(201).json({ success: true, message: 'User registered under institution.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error registering user.', error: err.message });
+  }
+});
+
+
+
 // Face verification
 router.post('/verify', async (req, res) => {
   const { descriptor: liveDescriptor } = req.body;
