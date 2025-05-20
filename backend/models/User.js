@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   descriptor: {
     type: [Number], 
     required: true,
+    unique: true,
   },
 }, { timestamps: true });
 
