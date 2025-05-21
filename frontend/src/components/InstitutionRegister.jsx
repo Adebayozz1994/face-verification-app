@@ -4,7 +4,7 @@ import * as faceapi from "face-api.js";
 import axios from "axios";
 
 const RegisterForm = () => {
-  const { linkId } = useParams(); 
+  const { linkId } = useParams();
   const videoRef = useRef();
   const canvasRef = useRef();
   const [name, setName] = useState("");
@@ -63,32 +63,43 @@ const RegisterForm = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>Register Under Institution</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">Register Under Institution</h2>
 
-      <video ref={videoRef} width="480" height="360" autoPlay muted></video>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
+        <div className="mb-4">
+          <video ref={videoRef} width="100%" height="auto" autoPlay muted className="rounded-md shadow-md" />
+          <canvas ref={canvasRef} style={{ display: "none" }} />
+        </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Full Name"
-        />
-        <br />
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <br />
-        <button onClick={captureFace} style={{ marginTop: "10px" }}>
-          Capture Face
-        </button>
-        <br />
-        <button onClick={handleSubmit} style={{ marginTop: "10px" }}>
-          Register
-        </button>
+        <div className="space-y-4">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+
+          <button
+            onClick={captureFace}
+            className="w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-medium transition"
+          >
+            Capture Face
+          </button>
+
+          <button
+            onClick={handleSubmit}
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition"
+          >
+            Register
+          </button>
+        </div>
       </div>
     </div>
   );

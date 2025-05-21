@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const institutionSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // 🔐 added password
+  password: { type: String, required: true }, 
   registrationLink: { type: String, required: true, unique: true },
   users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });

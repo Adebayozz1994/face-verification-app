@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Institution = require('../models/Institution');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcryptjs');
+
 
 
 router.post('/register', async (req, res) => {
@@ -62,6 +64,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Dashboard route to get logged-in institution by ID and populate users
+router.get('/dashboard/:id', async (req, res) => {
+  try {
+    const institution = await Institution.findById(req.params.id)
+      .select('-password')
+      .populate('users', 'name email'); // Only include name and email of users
+
+    if (!institution) {
+      return res.status(404).json({ message: 'Institution not found.' });
+    }
+
+    res.status(200).json(institution);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching dashboard.', error: err.message });
+  }
+});
+
+ 
+
+
 // router.get('/:id', async (req, res) => {
 //   const { id } = req.params;
 //   try {
@@ -93,5 +115,22 @@ router.post('/login', async (req, res) => {
 //       res.status(500).json({ message: 'Error registering user.', error: err.message });
 //     }
 //   });
+
+
+
+
+router.get('/dashboard/:institutionId', async (req, res) => {
+  try {
+    const institution = await Institution.findById(req.params.institutionId)
+      .populate('users', 'name email'); 
+
+    if (!institution) return res.status(404).json({ message: 'Institution not found' });
+
+    res.json(institution);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching dashboard.', error: err.message });
+  }
+});
+
 
 module.exports = router;

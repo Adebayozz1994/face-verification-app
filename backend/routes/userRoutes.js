@@ -38,8 +38,11 @@ router.post('/register/:linkId', async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(409).json({ message: 'User already exists.' });
 
-    const user = new User({ name, email, descriptor, institutionId: institution._id });
+  const user = new User({ name, email, descriptor, institution: institution._id });
     await user.save();
+
+      institution.users.push(user._id);
+    await institution.save();
 
     res.status(201).json({ success: true, message: 'User registered under institution.' });
   } catch (err) {
@@ -95,5 +98,17 @@ function euclideanDistance(d1, d2) {
   }
   return Math.sqrt(sum);
 }
+
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password"); 
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 module.exports = router;

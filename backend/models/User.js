@@ -13,9 +13,15 @@ const userSchema = new mongoose.Schema({
   },
 
   descriptor: {
-    type: [Number], 
+    type: [Number],
     required: true,
     unique: true,
+  },
+
+  institution: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Institution', 
+    required: true,
   },
 }, { timestamps: true });
 

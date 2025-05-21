@@ -11,7 +11,7 @@ const Home = () => {
             FaceSecure
           </div>
           <div className="space-x-6">
-            <a href="#login" className="text-gray-700 hover:text-indigo-600 font-medium">
+            <a href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
               Login
             </a>
             <a href="/institution" className="text-gray-700 hover:text-indigo-600 font-medium">
@@ -34,7 +34,7 @@ const Home = () => {
         </p>
         <div className="flex justify-center space-x-4">
           <a
-            href="#signup"
+            href="/institution"
             className="bg-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition duration-300"
           >
             Get Started

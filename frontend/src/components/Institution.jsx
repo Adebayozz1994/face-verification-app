@@ -92,7 +92,7 @@ const Institution = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {/* {registrationLink} */}
+              {registrationLink}
             </a>
           </div>
         )}

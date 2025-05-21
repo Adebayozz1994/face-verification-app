@@ -1,10 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard = ({ institution }) => {
+const Dashboard = () => {
+  const [institution, setInstitution] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(institution.registrationLink);
-    alert("Link copied to clipboard!");
+    if (institution?.registrationLink) {
+      navigator.clipboard.writeText(institution.registrationLink);
+      alert("Link copied to clipboard!");
+    }
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("institutionId");
+    navigate("/");
+  };
+
+  useEffect(() => {
+    const institutionId = localStorage.getItem("institutionId");
+    if (!institutionId) {
+      alert("No institution ID found. Please log in.");
+      navigate("/");
+      return;
+    }
+
+    const fetchInstitution = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/institutions/dashboard/${institutionId}`
+        );
+        console.log("Fetched institution data:", res.data);
+        setInstitution(res.data);
+      } catch (error) {
+        console.error("Dashboard fetch error:", error);
+        alert("Failed to load dashboard.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInstitution();
+  }, [navigate]);
+
+  if (loading) return <div className="text-center mt-10 text-gray-600">Loading dashboard...</div>;
+  if (!institution) return <div className="text-center mt-10 text-red-600">Institution not found.</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-indigo-100 to-purple-100 flex items-center justify-center p-4">
@@ -36,6 +78,13 @@ const Dashboard = ({ institution }) => {
             </button>
           </div>
         </div>
+
+        <button
+          onClick={handleLogout}
+          className="mt-6 w-full bg-red-500 text-white py-2 rounded-xl font-semibold hover:bg-red-600 transition"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

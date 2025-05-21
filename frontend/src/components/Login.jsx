@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Dashboard from "./Dashboard";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [institution, setInstitution] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -19,15 +19,17 @@ const Login = () => {
         password,
       });
 
-      setInstitution(res.data.institution);
+      const institutionData = res.data.institution;
+
+      // Save institution ID to localStorage
+      localStorage.setItem("institutionId", institutionData.id);
+
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
     }
   };
-
-  if (institution) {
-    return <Dashboard institution={institution} />;
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-indigo-100 via-white to-purple-100 px-4">
