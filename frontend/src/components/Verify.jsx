@@ -14,7 +14,7 @@ const Verify = () => {
   // Load face-api models
   useEffect(() => {
     const loadModels = async () => {
-      const MODEL_URL = "/models"; // Make sure this points to your public/models folder
+      const MODEL_URL = "/models"; 
       await Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
@@ -145,32 +145,62 @@ const Verify = () => {
   };
 
   return (
-    <div className="verify-page" style={{ textAlign: "center" }}>
-      <h2>Face Verification</h2>
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-6">
+      <h2 className="text-3xl font-semibold text-indigo-700 mb-6">Face Verification</h2>
 
-      <video ref={videoRef} width="480" height="360" autoPlay muted />
+      <video
+        ref={videoRef}
+        width="480"
+        height="360"
+        autoPlay
+        muted
+        className="rounded-lg shadow-lg border-4 border-indigo-300 mb-6"
+      />
 
-      <div>
+      <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md text-center space-y-4">
         {mode === "capture" && (
-          <div>
-            <button onClick={captureFace}>Capture Face for Verification</button>
-            <button onClick={verifyCapturedFace}>Verify Captured Face</button>
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={captureFace}
+              className="bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+            >
+              Capture Face for Verification
+            </button>
+            <button
+              onClick={verifyCapturedFace}
+              className="bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              Verify Captured Face
+            </button>
           </div>
         )}
 
         {mode === "video" && (
-          <div>
+          <div className="space-y-3">
             {loading ? (
-              <p>Loading models and starting video...</p>
+              <p className="text-gray-500 italic">Loading models and starting video...</p>
             ) : (
-              <p>Looking for a matching face...</p>
+              <p className="text-indigo-600 font-medium">Looking for a matching face...</p>
             )}
-            {user && <p>User Verified: {user.name} ({user.email})</p>}
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+            {user && (
+              <div className="text-green-700 font-semibold">
+                User Verified: 
+                <div>
+                  <strong className="underline">Name: {user.name}</strong>
+                </div>
+                <div>
+                <strong>Email: {user.email}</strong>
+                </div>
+              </div>
+            )}
+            {errorMessage && <p className="text-red-600 font-medium">{errorMessage}</p>}
           </div>
         )}
 
-        <button onClick={() => setMode(mode === "video" ? "capture" : "video")}>
+        <button
+          onClick={() => setMode(mode === "video" ? "capture" : "video")}
+          className="mt-4 px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"
+        >
           Switch to {mode === "video" ? "Capture Face" : "Live Video"} Mode
         </button>
       </div>

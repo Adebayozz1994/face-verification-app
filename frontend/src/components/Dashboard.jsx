@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import Verify from "./Verify"; // Adjust the path if Verify is elsewhere
 
-const Dashboard = () => {
-  const [institution, setInstitution] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+const Dashboard = ({ institution: propInstitution }) => {
+  const [institution, setInstitution] = useState(propInstitution || null);
+  const [loading, setLoading] = useState(!propInstitution);
+  const [showVerify, setShowVerify] = useState(false);  // <-- new state
 
   const handleCopy = () => {
     if (institution?.registrationLink) {
@@ -16,14 +16,15 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("institutionId");
-    navigate("/");
+    window.location.reload();
   };
 
   useEffect(() => {
+    if (institution) return;
+
     const institutionId = localStorage.getItem("institutionId");
     if (!institutionId) {
       alert("No institution ID found. Please log in.");
-      navigate("/");
       return;
     }
 
@@ -43,10 +44,25 @@ const Dashboard = () => {
     };
 
     fetchInstitution();
-  }, [navigate]);
+  }, [institution]);
 
   if (loading) return <div className="text-center mt-10 text-gray-600">Loading dashboard...</div>;
   if (!institution) return <div className="text-center mt-10 text-red-600">Institution not found.</div>;
+
+  // If toggled to show face verification:
+  if (showVerify) {
+    return (
+      <div className="min-h-screen bg-gradient-to-tr from-indigo-100 to-purple-100 flex flex-col items-center justify-center p-4">
+        <button
+          onClick={() => setShowVerify(false)}
+          className="mb-6 px-6 py-2 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition"
+        >
+          ← Back to Dashboard
+        </button>
+        <Verify />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-indigo-100 to-purple-100 flex items-center justify-center p-4">
@@ -77,11 +93,36 @@ const Dashboard = () => {
               Copy Link
             </button>
           </div>
+
+          {/* Users List */}
+          <div className="bg-green-50 p-4 rounded-xl border-l-4 border-green-500">
+            <h3 className="text-sm text-gray-500 mb-2">Registered Users</h3>
+            {institution.users && institution.users.length > 0 ? (
+              <ul className="list-disc list-inside text-green-800">
+                {institution.users.map((user) => (
+                  <li key={user._id} className="pl-2 mb-2">
+                    <div><strong>Name:</strong> {user.name}</div>
+                    <div><strong>Email:</strong> {user.email}</div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-green-700">No users registered yet.</p>
+            )}
+          </div>
         </div>
+
+        {/* New button to open Verify */}
+        <button
+          onClick={() => setShowVerify(true)}
+          className="mt-6 w-full bg-indigo-600 text-white py-2 rounded-xl font-semibold hover:bg-indigo-700 transition"
+        >
+          Face Verification
+        </button>
 
         <button
           onClick={handleLogout}
-          className="mt-6 w-full bg-red-500 text-white py-2 rounded-xl font-semibold hover:bg-red-600 transition"
+          className="mt-4 w-full bg-red-500 text-white py-2 rounded-xl font-semibold hover:bg-red-600 transition"
         >
           Logout
         </button>
