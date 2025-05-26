@@ -13,6 +13,9 @@ app.use(cors({
 }));
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to Face Verification App!');
+});
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
 const institutionRoutes = require('./routes/institutionRoutes');
