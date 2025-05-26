@@ -31,7 +31,7 @@ const Dashboard = ({ institution: propInstitution }) => {
     const fetchInstitution = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/institutions/dashboard/${institutionId}`
+          `https://face-verification-app.onrender.com/api/institutions/dashboard/${institutionId}`
         );
         console.log("Fetched institution data:", res.data);
         setInstitution(res.data);

@@ -43,7 +43,7 @@ const Register = () => {
     if (!descriptor) return alert("Capture a face first");
 
     if (mode === "register") {
-      const res = await axios.post("http://localhost:5000/api/users/register", {
+      const res = await axios.post("https://face-verification-app.onrender.com/api/users/register", {
         name,
         email,
         descriptor,

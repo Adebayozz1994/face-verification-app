@@ -14,7 +14,7 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/institutions/login", {
+      const res = await axios.post("https://face-verification-app.onrender.com/api/institutions/login", {
         email,
         password,
       });

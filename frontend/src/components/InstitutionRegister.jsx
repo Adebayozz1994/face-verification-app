@@ -49,7 +49,7 @@ const RegisterForm = () => {
     if (!name || !email) return alert("Please fill in all fields");
 
     try {
-      const res = await axios.post(`http://localhost:5000/api/users/register/${linkId}`, {
+      const res = await axios.post(`https://face-verification-app.onrender.com/api/users/register/${linkId}`, {
         name,
         email,
         descriptor,

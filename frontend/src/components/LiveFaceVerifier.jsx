@@ -24,7 +24,7 @@ const LiveFaceVerifier = () => {
   useEffect(() => {
     const loadKnownFaces = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/users/descriptors');
+        const res = await axios.get('https://face-verification-app.onrender.com/api/users/descriptors');
 
         // Create a name-to-user lookup map
         const userMap = {};

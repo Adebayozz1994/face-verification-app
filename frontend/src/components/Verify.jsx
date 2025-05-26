@@ -130,7 +130,7 @@ const Verify = () => {
     if (!descriptor) return alert("Capture a face first!");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/verify", {
+      const res = await axios.post("https://face-verification-app.onrender.com/api/users/verify", {
         descriptor,
       });
 
