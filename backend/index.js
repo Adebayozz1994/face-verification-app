@@ -8,7 +8,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:5173','https://face-verification-app.onrender.com'],
+  origin: ['http://localhost:5173','https://face-verification-app-neon.vercel.app'],
   credentials: true,
 }));
 
