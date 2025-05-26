@@ -14,7 +14,7 @@ const Verify = () => {
   // Load face-api models
   useEffect(() => {
     const loadModels = async () => {
-      const MODEL_URL = "/models"; 
+      const MODEL_URL = "/models";
       await Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
@@ -32,7 +32,7 @@ const Verify = () => {
   useEffect(() => {
     const loadKnownFaces = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/users/descriptors");
+        const res = await axios.get("https://face-verification-app.onrender.com/api/users/descriptors");
 
         const userMap = {};
         const labeledDescriptors = res.data.map((user) => {
@@ -79,6 +79,7 @@ const Verify = () => {
     let interval;
 
     const detectAndMatch = () => {
+      console.log("Starting live face detection...");
       interval = setInterval(async () => {
         if (!videoRef.current || !faceMatcher) return;
 
@@ -104,10 +105,11 @@ const Verify = () => {
     };
 
     if (videoRef.current && faceMatcher) {
-      videoRef.current.addEventListener("loadeddata", () => {
+      // Wait for video to play
+      setTimeout(() => {
         setLoading(false);
         detectAndMatch();
-      });
+      }, 1000); // Delay to ensure video is ready
     }
 
     return () => clearInterval(interval);
@@ -154,6 +156,7 @@ const Verify = () => {
         height="360"
         autoPlay
         muted
+        playsInline
         className="rounded-lg shadow-lg border-4 border-indigo-300 mb-6"
       />
 
@@ -184,12 +187,12 @@ const Verify = () => {
             )}
             {user && (
               <div className="text-green-700 font-semibold">
-                User Verified: 
+                User Verified:
                 <div>
                   <strong className="underline">Name: {user.name}</strong>
                 </div>
                 <div>
-                <strong>Email: {user.email}</strong>
+                  <strong>Email: {user.email}</strong>
                 </div>
               </div>
             )}
