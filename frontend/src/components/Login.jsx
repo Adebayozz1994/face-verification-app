@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -14,19 +14,23 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post("https://face-verification-app.onrender.com/api/institutions/login", {
+      const res = await axios.post("https://face-verification-app-neon.vercel.app/api/admins/login", {
         email,
         password,
       });
 
-      const institutionData = res.data.institution;
+      const adminData = res.data.admin;
 
-      // Save institution ID to localStorage
-      localStorage.setItem("institutionId", institutionData.id);
+      // Save token and admin ID to localStorage
+      localStorage.setItem("adminId", adminData.id);
+      localStorage.setItem("adminToken", res.data.token);
 
-      // Navigate to dashboard after successful login
-      navigate("/dashboard");
+      alert("Login successful!");
+
+      // Navigate to admin dashboard
+      navigate("/admin/dashboard");
     } catch (error) {
+      console.error("Login failed:", error);
       alert(error.response?.data?.message || "Login failed");
     }
   };
@@ -35,23 +39,23 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-indigo-100 via-white to-purple-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-          Institution Login
+          Admin Login
         </h2>
 
         <div className="space-y-4">
           <input
             type="email"
-            placeholder="Institution Email"
+            placeholder="Admin Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
           />
 
           <button
@@ -66,4 +70,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;

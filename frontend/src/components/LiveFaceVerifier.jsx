@@ -4,42 +4,41 @@ import axios from 'axios';
 
 const LiveFaceVerifier = () => {
   const videoRef = useRef(null);
-  const [user, setUser] = useState(null);
+  const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [faceMatcher, setFaceMatcher] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(""); // New state for error message
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Load face-api models
+  // Load models
   useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = '/models';
       await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
-      await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
       await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
     };
     loadModels();
   }, []);
 
-  // Load known face descriptors from backend
+  // Fetch descriptors and create matcher
   useEffect(() => {
     const loadKnownFaces = async () => {
       try {
-        const res = await axios.get('https://face-verification-app.onrender.com/api/users/descriptors');
+        const res = await axios.get('https://face-verification-app-neon.vercel.app/api/users/descriptors');
 
-        // Create a name-to-user lookup map
-        const userMap = {};
-        const labeledDescriptors = res.data.map(user => {
-          userMap[user.name] = user; // Save full user by name
+        const studentMap = {};
+        const labeledDescriptors = res.data.map(student => {
+          studentMap[student.name] = student;
           return new faceapi.LabeledFaceDescriptors(
-            user.name,
-            [new Float32Array(user.descriptor)]
+            student.name,
+            [new Float32Array(student.descriptor)]
           );
         });
 
-        const matcher = new faceapi.FaceMatcher(labeledDescriptors, 0.45); // 0.45 is strict
-        setFaceMatcher({ matcher, userMap }); // Store both matcher and map
+        const matcher = new faceapi.FaceMatcher(labeledDescriptors, 0.45);
+        setFaceMatcher({ matcher, studentMap });
       } catch (err) {
-        console.error('Error loading known descriptors:', err);
+        console.error('Error loading descriptors:', err);
       }
     };
     loadKnownFaces();
@@ -54,9 +53,11 @@ const LiveFaceVerifier = () => {
           videoRef.current.srcObject = stream;
         }
       } catch (err) {
-        console.error('Webcam error:', err);
+        console.error('Camera error:', err);
+        alert("Please allow camera access.");
       }
     };
+
     const wait = setInterval(() => {
       if (videoRef.current) {
         clearInterval(wait);
@@ -65,7 +66,7 @@ const LiveFaceVerifier = () => {
     }, 100);
   }, []);
 
-  // Detect and match face
+  // Face detection & matching
   useEffect(() => {
     let interval;
     const detectAndMatch = () => {
@@ -81,16 +82,16 @@ const LiveFaceVerifier = () => {
           const bestMatch = faceMatcher.matcher.findBestMatch(detection.descriptor);
 
           if (bestMatch.label !== 'unknown') {
-            const matchedUser = faceMatcher.userMap[bestMatch.label];
-            setUser({ name: matchedUser.name, email: matchedUser.email });
-            setErrorMessage(""); // Clear any error message if a match is found
-            clearInterval(interval); // Stop the detection once a match is found
+            const matchedStudent = faceMatcher.studentMap[bestMatch.label];
+            setStudent(matchedStudent);
+            setErrorMessage("");
+            clearInterval(interval); // stop scanning
           } else {
-            setErrorMessage("No matching face found in the database."); // Set error message if no match
-            setUser(null); // Clear any previous user data
+            setErrorMessage("No matching face found.");
+            setStudent(null);
           }
         }
-      }, 1500); // Check every 1.5 seconds
+      }, 1500);
     };
 
     if (videoRef.current && faceMatcher) {
@@ -100,7 +101,7 @@ const LiveFaceVerifier = () => {
       });
     }
 
-    return () => clearInterval(interval); // Clean up the interval
+    return () => clearInterval(interval);
   }, [faceMatcher]);
 
   return (
@@ -118,17 +119,19 @@ const LiveFaceVerifier = () => {
 
       {loading && <p>Loading models and starting camera...</p>}
 
-      {user ? (
-        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded">
-          <h3 className="text-xl font-semibold">User Verified</h3>
-          <p>Name: {user.name}</p>
-          <p>Email: {user.email}</p>
+      {student ? (
+        <div className="mt-6 bg-green-100 text-green-900 p-4 rounded shadow text-left max-w-md mx-auto">
+          <h3 className="text-xl font-bold mb-2">✅ Student Verified</h3>
+          <p><strong>Name:</strong> {student.name}</p>
+          <p><strong>Email:</strong> {student.email}</p>
+          <p><strong>Matric Number:</strong> {student.matricNo}</p>
+          <p><strong>Admission Number:</strong> {student.admissionNo}</p>
+          <p><strong>Department:</strong> {student.department}</p>
         </div>
-      ) : !loading ? (
+      ) : !loading && !errorMessage ? (
         <p className="mt-4 text-gray-600">Looking for a matching face...</p>
       ) : null}
 
-      {/* Display error message if no match is found */}
       {errorMessage && <p className="mt-4 text-red-600">{errorMessage}</p>}
     </div>
   );

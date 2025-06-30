@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const institutionSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  faculty: { type: String, required: true }, // New field
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, 
+  password: { type: String, required: true },
   registrationLink: { type: String, required: true, unique: true },
-  users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
 }, { timestamps: true });
 
-// Hash password before saving
-institutionSchema.pre('save', async function (next) {
+adminSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   try {
     const salt = await bcrypt.genSalt(10);
@@ -21,4 +21,4 @@ institutionSchema.pre('save', async function (next) {
   }
 });
 
-module.exports = mongoose.model('Institution', institutionSchema);
+module.exports = mongoose.model('Admin', adminSchema);

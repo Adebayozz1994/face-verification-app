@@ -32,7 +32,7 @@ const Verify = () => {
   useEffect(() => {
     const loadKnownFaces = async () => {
       try {
-        const res = await axios.get("https://face-verification-app.onrender.com/api/users/descriptors");
+        const res = await axios.get("https://face-verification-app-neon.vercel.app/api/students/descriptors");
 
         const userMap = {};
         const labeledDescriptors = res.data.map((user) => {
@@ -93,7 +93,13 @@ const Verify = () => {
 
           if (bestMatch.label !== "unknown") {
             const matchedUser = faceMatcher.userMap[bestMatch.label];
-            setUser({ name: matchedUser.name, email: matchedUser.email });
+            setUser({
+              name: matchedUser.name,
+              email: matchedUser.email,
+              matricNo: matchedUser.matricNo,
+              admissionNo: matchedUser.admissionNo,
+              department: matchedUser.department
+            });
             setErrorMessage("");
             clearInterval(interval); // Stop once matched
           } else {
@@ -132,12 +138,20 @@ const Verify = () => {
     if (!descriptor) return alert("Capture a face first!");
 
     try {
-      const res = await axios.post("https://face-verification-app.onrender.com/api/users/verify", {
+      const res = await axios.post("https://face-verification-app-neon.vercel.app/api/students/verify", {
         descriptor,
       });
 
       if (res.data.success) {
-        alert(`User matched:\nName: ${res.data.user.name}\nEmail: ${res.data.user.email}`);
+        alert(
+          `User matched:
+Name: ${res.data.user.name}
+Email: ${res.data.user.email}
+Matric No: ${res.data.user.matricNo}
+Admission No: ${res.data.user.admissionNo}
+Department: ${res.data.user.department}`
+        );
+
       } else {
         alert("No match found, try registering first");
       }
@@ -193,6 +207,15 @@ const Verify = () => {
                 </div>
                 <div>
                   <strong>Email: {user.email}</strong>
+                </div>
+                <div>
+                  <strong>MatricNo: {user.matricNo}</strong>
+                </div>
+                <div>
+                  <strong>AdmissionNo: {user.admissionNo}</strong>
+                </div>
+                <div>
+                  <strong>Department: {user.department}</strong>
                 </div>
               </div>
             )}

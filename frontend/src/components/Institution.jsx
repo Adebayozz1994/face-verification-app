@@ -1,52 +1,65 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // ✅ import navigate
+import { useNavigate } from "react-router-dom";
 
-const Institution = () => {
+const AdminRegister = () => {
   const [name, setName] = useState("");
+  const [faculty, setFaculty] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [registrationLink, setRegistrationLink] = useState("");
 
-  const navigate = useNavigate(); // ✅ initialize navigation
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    if (!name || !email || !password) {
-      alert("Please fill all fields");
+    if (!name || !faculty || !email || !password) {
+      alert("Please fill in all fields");
       return;
     }
 
     try {
-      const res = await axios.post("https://face-verification-app.onrender.com/api/institutions/register", {
+      const res = await axios.post("https://face-verification-app-neon.vercel.app/api/admins/register", {
         name,
+        faculty,
         email,
         password,
       });
 
       setRegistrationLink(res.data.registrationLink);
-      alert("Institution registered successfully!");
+      alert("Admin registered successfully!");
 
-      // ✅ Navigate to login page after success
-      navigate("/login");
-
+      // Optionally wait a few seconds before navigating:
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     } catch (error) {
-      console.error("Error registering institution:", error);
-      alert("Failed to register institution.");
+      console.error("Error registering admin:", error.response?.data || error.message);
+      alert("Failed to register admin.");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-indigo-100 via-white to-purple-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">Register Institution</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
+          Register Admin
+        </h2>
 
         <div className="space-y-4">
           <input
             type="text"
-            placeholder="Institution Name"
+            placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          />
+
+          <input
+            type="text"
+            placeholder="Faculty"
+            value={faculty}
+            onChange={(e) => setFaculty(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
           />
 
@@ -79,13 +92,15 @@ const Institution = () => {
             onClick={handleSubmit}
             className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl transition font-semibold"
           >
-            Register Institution
+            Register Admin
           </button>
         </div>
 
         {registrationLink && (
           <div className="mt-6 text-center">
-            <p className="text-gray-600 font-medium">Share this link with your users:</p>
+            <p className="text-gray-600 font-medium">
+              Share this link with your users:
+            </p>
             <a
               href={registrationLink}
               className="text-indigo-600 underline break-all mt-2 inline-block"
@@ -101,4 +116,4 @@ const Institution = () => {
   );
 };
 
-export default Institution;
+export default AdminRegister;
