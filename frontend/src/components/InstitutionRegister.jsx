@@ -13,7 +13,6 @@ const RegisterForm = () => {
   const [department, setDepartment] = useState("");
   const [descriptor, setDescriptor] = useState(null);
   const [loadingModels, setLoadingModels] = useState(true);
-
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [registrationComplete, setRegistrationComplete] = useState(false);
@@ -49,7 +48,7 @@ const RegisterForm = () => {
     if (videoRef.current?.srcObject) return;
 
     navigator.mediaDevices
-      .getUserMedia({ video: true })
+      .getUserMedia({ video: { facingMode: "user" } }) // front-facing camera
       .then((stream) => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -124,22 +123,18 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-4 overflow-hidden">
-      {/* Faculty Check Warning */}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-4">
       <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md shadow-md mb-2 w-full max-w-lg">
         <p className="text-sm font-medium">
-          ⚠️ Please ensure you're registering under the correct{" "}
-          <strong>Faculty</strong> before proceeding.
+          ⚠️ Please ensure you're registering under the correct <strong>Faculty</strong>.
         </p>
       </div>
 
-      {/* Form Card */}
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg overflow-y-auto h-full">
         <h2 className="text-2xl font-semibold text-center mb-4 text-gray-800">
           Register as a Student
         </h2>
 
-        {/* Message Banner */}
         {message && (
           <div
             className={`p-3 rounded-md text-sm mb-4 ${
@@ -152,15 +147,12 @@ const RegisterForm = () => {
           </div>
         )}
 
-        {/* Registration Complete View */}
         {registrationComplete ? (
           <div className="text-center space-y-4 mt-10">
             <h3 className="text-xl font-semibold text-green-700">
               🎉 Registration Successful!
             </h3>
-            <p className="text-gray-600">
-              Would you like to register another student?
-            </p>
+            <p className="text-gray-600">Would you like to register another student?</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={resetForm}
@@ -177,23 +169,19 @@ const RegisterForm = () => {
             </div>
           </div>
         ) : loadingModels ? (
-          <p className="text-center text-gray-500">
-            Loading face recognition models...
-          </p>
+          <p className="text-center text-gray-500">Loading face recognition models...</p>
         ) : (
           <>
-            {/* Camera Preview */}
             <div className="mb-4">
               <video
                 ref={videoRef}
                 autoPlay
                 muted
                 playsInline
-                className="rounded-md shadow-md w-full max-h-40 sm:max-h-64 object-cover"
+                className="rounded-md shadow-md w-full h-[300px] sm:h-[400px] md:h-[450px] object-cover"
               />
             </div>
 
-            {/* Form Inputs */}
             <div className="space-y-3">
               <input
                 value={name}
