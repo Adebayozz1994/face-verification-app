@@ -36,7 +36,7 @@ const Dashboard = ({ admin: propAdmin }) => {
     const fetchAdmin = async () => {
       try {
         const res = await axios.get(
-          `https://face-verification-app-neon.vercel.app/api/admins/dashboard/${adminId}`
+          `https://face-verification-app.onrender.com/api/admins/dashboard/${adminId}`
         );
         setAdmin(res.data);
       } catch (error) {

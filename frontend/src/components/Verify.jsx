@@ -32,7 +32,7 @@ const Verify = () => {
   useEffect(() => {
     const loadKnownFaces = async () => {
       try {
-        const res = await axios.get("https://face-verification-app-neon.vercel.app/api/students/descriptors");
+        const res = await axios.get("https://face-verification-app.onrender.com/api/students/descriptors");
 
         const userMap = {};
         const labeledDescriptors = res.data.map((user) => {
@@ -138,7 +138,7 @@ const Verify = () => {
     if (!descriptor) return alert("Capture a face first!");
 
     try {
-      const res = await axios.post("https://face-verification-app-neon.vercel.app/api/students/verify", {
+      const res = await axios.post("https://face-verification-app.onrender.com/api/students/verify", {
         descriptor,
       });
 

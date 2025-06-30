@@ -56,7 +56,7 @@ const StudentRegister = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `https://face-verification-app-neon.vercel.app/api/users/register/${linkId}`,
+        `https://face-verification-app.onrender.com/api/users/register/${linkId}`,
         {
           name,
           email,

@@ -90,7 +90,7 @@ const RegisterForm = () => {
 
     try {
       const res = await axios.post(
-        `https://face-verification-app-neon.vercel.app/api/students/register/${linkId}`,
+        `https://face-verification-app.onrender.com/api/students/register/${linkId}`,
         {
           name,
           email,

@@ -14,7 +14,7 @@ const AdminLogin = () => {
     }
 
     try {
-      const res = await axios.post("https://face-verification-app-neon.vercel.app/api/admins/login", {
+      const res = await axios.post("https://face-verification-app.onrender.com/api/admins/login", {
         email,
         password,
       });

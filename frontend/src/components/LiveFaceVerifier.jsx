@@ -24,7 +24,7 @@ const LiveFaceVerifier = () => {
   useEffect(() => {
     const loadKnownFaces = async () => {
       try {
-        const res = await axios.get('https://face-verification-app-neon.vercel.app/api/users/descriptors');
+        const res = await axios.get('https://face-verification-app.onrender.com/api/users/descriptors');
 
         const studentMap = {};
         const labeledDescriptors = res.data.map(student => {

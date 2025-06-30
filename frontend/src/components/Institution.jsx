@@ -19,7 +19,7 @@ const AdminRegister = () => {
     }
 
     try {
-      const res = await axios.post("https://face-verification-app-neon.vercel.app/api/admins/register", {
+      const res = await axios.post("https://face-verification-app.onrender.com/api/admins/register", {
         name,
         faculty,
         email,
