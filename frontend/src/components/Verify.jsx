@@ -89,8 +89,6 @@ const Verify = () => {
           .withFaceDescriptor();
 
         if (detection) {
-          alert("Face detected!"); // 🔔 Notify on any detection
-
           const bestMatch = faceMatcher.matcher.findBestMatch(detection.descriptor);
 
           if (bestMatch.label !== "unknown") {
@@ -102,15 +100,6 @@ const Verify = () => {
               department: matchedUser.department
             });
             setErrorMessage("");
-
-            alert(
-              `User Matched:
-Name: ${matchedUser.name}
-Email: ${matchedUser.email}
-Admission No: ${matchedUser.admissionNo}
-Department: ${matchedUser.department}`
-            );
-
             clearInterval(interval); // Stop once matched
           } else {
             setErrorMessage("No matching face found in the database.");
@@ -121,10 +110,11 @@ Department: ${matchedUser.department}`
     };
 
     if (videoRef.current && faceMatcher) {
+      // Wait for video to play
       setTimeout(() => {
         setLoading(false);
         detectAndMatch();
-      }, 1000);
+      }, 1000); // Delay to ensure video is ready
     }
 
     return () => clearInterval(interval);
@@ -159,6 +149,7 @@ Email: ${res.data.user.email}
 Admission No: ${res.data.user.admissionNo}
 Department: ${res.data.user.department}`
         );
+
       } else {
         alert("No match found, try registering first");
       }
