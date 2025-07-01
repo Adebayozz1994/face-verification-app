@@ -8,7 +8,7 @@ router.post('/register/:linkId', async (req, res) => {
   const { linkId } = req.params;
   const { name, email, descriptor, admissionNo, department } = req.body;
 
-  if (!name || !email || !descriptor || !matricNo || !admissionNo || !department) {
+  if (!name || !email || !descriptor || !admissionNo || !department) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
 
