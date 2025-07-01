@@ -8,7 +8,6 @@ const RegisterForm = () => {
   const videoRef = useRef();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [matricNo, setMatricNo] = useState("");
   const [admissionNo, setAdmissionNo] = useState("");
   const [department, setDepartment] = useState("");
   const [descriptor, setDescriptor] = useState(null);
@@ -48,7 +47,7 @@ const RegisterForm = () => {
     if (videoRef.current?.srcObject) return;
 
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: "user" } }) // front-facing camera
+      .getUserMedia({ video: { facingMode: "user" } }) 
       .then((stream) => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -81,7 +80,7 @@ const RegisterForm = () => {
   };
 
   const handleSubmit = async () => {
-    if (!name || !email || !matricNo || !admissionNo || !department || !descriptor) {
+    if (!name || !email || !admissionNo || !department || !descriptor) {
       setMessageType("error");
       setMessage("Please fill all fields and capture your face.");
       return;
@@ -93,7 +92,6 @@ const RegisterForm = () => {
         {
           name,
           email,
-          matricNo,
           admissionNo,
           department,
           descriptor,
@@ -113,7 +111,6 @@ const RegisterForm = () => {
   const resetForm = () => {
     setName("");
     setEmail("");
-    setMatricNo("");
     setAdmissionNo("");
     setDepartment("");
     setDescriptor(null);
@@ -194,12 +191,6 @@ const RegisterForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 type="email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-              />
-              <input
-                value={matricNo}
-                onChange={(e) => setMatricNo(e.target.value)}
-                placeholder="Matric Number"
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
               <input

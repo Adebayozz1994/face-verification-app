@@ -6,7 +6,7 @@ const Admin = require('../models/Admin');
 // Register student under admin link
 router.post('/register/:linkId', async (req, res) => {
   const { linkId } = req.params;
-  const { name, email, descriptor, matricNo, admissionNo, department } = req.body;
+  const { name, email, descriptor, admissionNo, department } = req.body;
 
   if (!name || !email || !descriptor || !matricNo || !admissionNo || !department) {
     return res.status(400).json({ message: 'All fields are required.' });
@@ -23,7 +23,6 @@ router.post('/register/:linkId', async (req, res) => {
       name,
       email,
       descriptor,
-      matricNo,
       admissionNo,
       department,
       admin: admin._id
@@ -49,7 +48,7 @@ router.post('/verify', async (req, res) => {
   }
 
   try {
-    const students = await Student.find({}, 'name email descriptor admissionNo matricNo department');
+    const students = await Student.find({}, 'name email descriptor admissionNo department');
 
     let bestMatch = null;
     let minDistance = Infinity;
@@ -82,7 +81,7 @@ router.post('/verify', async (req, res) => {
 // Get all student descriptors
 router.get('/descriptors', async (req, res) => {
   try {
-    const students = await Student.find({}, 'name email descriptor admissionNo matricNo department');
+    const students = await Student.find({}, 'name email descriptor admissionNo department');
     res.json(students);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching descriptors.', error: err.message });

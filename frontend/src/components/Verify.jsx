@@ -96,7 +96,6 @@ const Verify = () => {
             setUser({
               name: matchedUser.name,
               email: matchedUser.email,
-              matricNo: matchedUser.matricNo,
               admissionNo: matchedUser.admissionNo,
               department: matchedUser.department
             });
@@ -147,7 +146,6 @@ const Verify = () => {
           `User matched:
 Name: ${res.data.user.name}
 Email: ${res.data.user.email}
-Matric No: ${res.data.user.matricNo}
 Admission No: ${res.data.user.admissionNo}
 Department: ${res.data.user.department}`
         );
@@ -207,9 +205,6 @@ Department: ${res.data.user.department}`
                 </div>
                 <div>
                   <strong>Email: {user.email}</strong>
-                </div>
-                <div>
-                  <strong>MatricNo: {user.matricNo}</strong>
                 </div>
                 <div>
                   <strong>AdmissionNo: {user.admissionNo}</strong>

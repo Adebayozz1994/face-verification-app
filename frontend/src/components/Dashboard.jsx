@@ -150,9 +150,6 @@ const Dashboard = ({ admin: propAdmin }) => {
                       <strong>Email:</strong> {student.email}
                     </div>
                     <div>
-                      <strong>Matric No:</strong> {student.matricNo}
-                    </div>
-                    <div>
                       <strong>Admission No:</strong> {student.admissionNo}
                     </div>
                     <div>
